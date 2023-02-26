@@ -137,7 +137,7 @@ public:
 static ConVar snd_los_enabled("snd_los_enabled", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED, "Enable Latency of Sound (LoS) (1 - enabled, otherwise - disabled)");
 static ConVar snd_los_speed_of_sound("snd_los_speed_of_sound", "343", FCVAR_CHEAT | FCVAR_REPLICATED, "Speed of sound (in m/s)");
 static ConVar snd_los_min_distance("snd_los_min_distance", "1024", FCVAR_ARCHIVE | FCVAR_REPLICATED, "Minimal distance at which LoS works (in inches)");
-static ConVar snd_los_debug("snd_los_debug", "0", FCVAR_REPLICATED, "Print sound delay when the event is queued (1 - enabled, otherwise - disabled)");
+static ConVar snd_los_debug("snd_los_debug", "1", FCVAR_REPLICATED, "Print sound delay when the event is queued (1 - enabled, otherwise - disabled)");
 
 static bool LOS_CalcDelay(const Vector& vOrigin, float& flDelay)
 {
