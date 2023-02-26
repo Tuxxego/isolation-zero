@@ -489,7 +489,7 @@ void CBaseViewModel::AddViewModelBob(CBasePlayer* owner, Vector& eyePosition, QA
 
 
 
-
+// concept stuff
 
 void CBaseViewModel::CalcViewModelLag(Vector& origin, QAngle& angles, QAngle& original_angles)
 {
