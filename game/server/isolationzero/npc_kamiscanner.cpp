@@ -190,7 +190,7 @@ BEGIN_DATADESC( CNPC_KamiScanner )
 END_DATADESC()
 
 
-LINK_ENTITY_TO_CLASS(npc_ckamiscanner, CNPC_KamiScanner);
+LINK_ENTITY_TO_CLASS(npc_kamiscanner, CNPC_KamiScanner);
 
 
 //-----------------------------------------------------------------------------
