@@ -3706,6 +3706,9 @@
     <ClCompile Include="isolationzero\npc_kamiscanner.cpp">
       <Filter>Source Files\IZ DLL</Filter>
     </ClCompile>
+    <ClCompile Include="isolationzero\weapon_striker.cpp">
+      <Filter>Source Files\IZ DLL</Filter>
+    </ClCompile>
     <ClCompile Include="mapbase\ai_grenade.cpp">
       <Filter>Source Files\Mapbase</Filter>
     </ClCompile>

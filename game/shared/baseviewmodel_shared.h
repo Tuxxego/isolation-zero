@@ -203,8 +203,7 @@ private:
 	// Weapon art
 	string_t				m_sVMName;			// View model of this weapon
 	string_t				m_sAnimationPrefix;		// Prefix of the animations that should be used by the player carrying this weapon
-
-		// View-bobbing and swaying.
+			// View-bobbing and swaying.
 	float m_flSideTiltResult;
 	float m_flSideTiltDifference;
 	float m_flForwardOffsetResult;
@@ -221,6 +220,7 @@ private:
 	QAngle m_angMotion;
 	QAngle m_angCounterMotion;
 	QAngle m_angCompensation;
+
 
 
 #if defined( CLIENT_DLL )
