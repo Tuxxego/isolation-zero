@@ -231,8 +231,8 @@ float	g_verticalBob;
 
 #if defined( CLIENT_DLL ) && ( !defined( HL2MP ) && !defined( PORTAL ) )
 
-#define	HL2_BOB_CYCLE_MIN	0.45f
-#define	HL2_BOB_CYCLE_MAX	0.20f
+#define	HL2_BOB_CYCLE_MIN	1.0f
+#define	HL2_BOB_CYCLE_MAX	0.45f
 #define	HL2_BOB			0.002f
 #define	HL2_BOB_UP		0.5f
 

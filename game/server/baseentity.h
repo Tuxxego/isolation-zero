@@ -2139,7 +2139,6 @@ public:
 
 	void VScriptPrecacheScriptSound(const char* soundname);
 
-
 	const Vector& ScriptGetLocalAngularVelocity( void );
 	void ScriptSetLocalAngularVelocity( float pitchVel, float yawVel, float rollVel );
 

@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\lib\public\discord-rpc.lib">
-      <Filter>Link Libraries</Filter>
-    </Library>
     <Library Include="..\..\lib\public\mathlib.lib">
       <Filter>Link Libraries</Filter>
     </Library>
@@ -179,6 +176,9 @@
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\source_win32_base.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\vpc_scripts\steamworks_update.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\version.vpc">

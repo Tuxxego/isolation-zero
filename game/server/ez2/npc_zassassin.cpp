@@ -13,14 +13,14 @@
 
 #include "cbase.h"
 #include "game.h"
-#include "AI_Default.h"
-#include "AI_Schedule.h"
-#include "AI_Hull.h"
-#include "AI_Route.h"
-#include "AI_Hint.h"
-#include "AI_Navigator.h"
-#include "AI_Senses.h"
-#include "NPCEvent.h"
+#include "ai_default.h"
+#include "ai_schedule.h"
+#include "ai_hull.h"
+#include "ai_route.h"
+#include "ai_hint.h"
+#include "ai_navigator.h"
+#include "ai_senses.h"
+#include "npcevent.h"
 #include "animation.h"
 #include "npc_zassassin.h"
 #include "gib.h"
@@ -177,7 +177,14 @@ void CGonomeSpit:: Spawn( void )
 	SetRenderColorA( 255 );
 	SetModel( "" );
 
-	SetRenderColor( 150, 0, 0, 255 );
+	if ( m_bGoo )
+	{
+		SetRenderColor( 255, 255, 255, 255 );
+	}
+	else
+	{
+		SetRenderColor( 150, 0, 0, 255 );
+	}
 	
 	UTIL_SetSize( this, Vector( 0, 0, 0), Vector(0, 0, 0) );
 
@@ -188,13 +195,12 @@ void CGonomeSpit::Shoot( CBaseEntity *pOwner, int nGonomeSpitSprite, CSprite * p
 {
 	CGonomeSpit *pSpit = CREATE_ENTITY( CGonomeSpit, "squidspit" );
 	pSpit->m_nGonomeSpitSprite = nGonomeSpitSprite;
+	pSpit->SetOwnerEntity( pOwner );
+	pSpit->m_bGoo = (pSpit->GetOwnerEntity() && pSpit->GetOwnerEntity()->IsNPC()) ? pSpit->GetOwnerEntity()->MyNPCPointer()->m_tEzVariant == EZ_VARIANT_RAD : false;
 	pSpit->Spawn();
 	
 	UTIL_SetOrigin( pSpit, vecStart );
 	pSpit->SetAbsVelocity( vecVelocity );
-	pSpit->SetOwnerEntity( pOwner );
-
-	pSpit->m_bGoo = (pSpit->GetOwnerEntity() && pSpit->GetOwnerEntity()->IsNPC()) ? pSpit->GetOwnerEntity()->MyNPCPointer()->m_tEzVariant == EZ_VARIANT_RAD : false;
 
 	pSpit->SetSprite( pSprite );
 

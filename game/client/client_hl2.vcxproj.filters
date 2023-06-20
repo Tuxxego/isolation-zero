@@ -72,7 +72,16 @@
     <Library Include="..\..\lib\public\dmxloader.lib">
       <Filter>Link Libraries</Filter>
     </Library>
+    <Library Include="..\..\lib\public\expanded_steam.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
+    <Library Include="..\..\lib\common\jpeglib.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
     <Library Include="..\..\lib\common\libcurl.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
+    <Library Include="..\..\lib\common\libpng.lib">
       <Filter>Link Libraries</Filter>
     </Library>
     <Library Include="..\..\lib\public\libprotobuf.lib">
@@ -858,6 +867,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imessagechars.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\img_jpeg_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\img_png_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="in_main.h">
@@ -1937,6 +1952,9 @@
     <ClInclude Include="..\..\game\shared\mapbase\vscript_singletons.h">
       <Filter>Source Files\Mapbase</Filter>
     </ClInclude>
+    <ClInclude Include="mapbase\vscript_vgui.h">
+      <Filter>Source Files\Mapbase</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\mapbase\weapon_custom_scripted.h">
       <Filter>Source Files\Mapbase</Filter>
     </ClInclude>
@@ -2584,6 +2602,12 @@
     <ClCompile Include="..\..\game\shared\igamesystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\img_jpeg_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\img_png_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="in_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -2594,6 +2618,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="in_mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="in_steaminput_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="initializer.cpp">
@@ -3340,6 +3367,9 @@
     <ClCompile Include="..\..\game\shared\mapbase\vscript_singletons.cpp">
       <Filter>Source Files\Mapbase</Filter>
     </ClCompile>
+    <ClCompile Include="mapbase\vscript_vgui.cpp">
+      <Filter>Source Files\Mapbase</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\mapbase\weapon_custom_scripted.cpp">
       <Filter>Source Files\Mapbase</Filter>
     </ClCompile>
@@ -3568,6 +3598,9 @@
     <None Include="vscript_client.nut">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="mapbase\vscript_vgui.nut">
+      <Filter>Source Files\Mapbase</Filter>
+    </None>
     <None Include="..\..\game\client\client_base.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
@@ -3608,6 +3641,9 @@
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\source_win32_base.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\vpc_scripts\steamworks_update.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\version.vpc">

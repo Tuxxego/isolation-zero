@@ -1,5 +1,5 @@
 #include "cbase.h"
-#include "c_EZ2_player.h"
+#include "c_ez2_player.h"
 #include "point_bonusmaps_accessor.h"
 #include "achievementmgr.h"
 #include "basegrenade_shared.h"
@@ -8,7 +8,7 @@
 	#undef CEZ2Player
 #endif
 
-ConVar cl_slam_glow( "cl_slam_glow", "0" );
+ConVar cl_slam_glow( "cl_slam_glow", "0", FCVAR_ARCHIVE );
 
 IMPLEMENT_CLIENTCLASS_DT( C_EZ2_Player, DT_EZ2_Player, CEZ2_Player )
 	RecvPropBool( RECVINFO( m_bBonusChallengeUpdate ) ),

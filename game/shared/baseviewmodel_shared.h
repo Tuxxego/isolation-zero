@@ -51,12 +51,11 @@ public:
 	// Weapon client handling
 	virtual void			SendViewModelMatchingSequence( int sequence );
 	virtual void			SetWeaponModel( const char *pszModelname, CBaseCombatWeapon *weapon );
-#ifndef GAME_DLL
+
 	virtual void			CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& original_angles );
-#endif
 	virtual void			CalcViewModelView( CBasePlayer *owner, const Vector& eyePosition, 
 								const QAngle& eyeAngles );
-//	void			AddViewModelBob( CBasePlayer *owner, Vector& eyePosition, QAngle& eyeAngles ) {};
+	virtual void			AddViewModelBob( CBasePlayer *owner, Vector& eyePosition, QAngle& eyeAngles ) {};
 
 	// Initializes the viewmodel for use							
 	void					SetOwner( CBaseEntity *pEntity );
@@ -176,11 +175,6 @@ public:
 	virtual bool			GetAttachment( int number, Vector &origin );
 	virtual	bool			GetAttachment( int number, Vector &origin, QAngle &angles );
 	virtual bool			GetAttachmentVelocity( int number, Vector &originVel, Quaternion &angleVel );
-
-	virtual void			AddViewModelBob(CBasePlayer* owner, Vector& eyePosition, QAngle& eyeAngles);
-#endif
-#ifdef CLIENT_DLL
-	//virtual void			CalcViewModelLag(Vector& origin, QAngle& angles, QAngle& original_angles);
 #endif
 
 private:
@@ -203,25 +197,6 @@ private:
 	// Weapon art
 	string_t				m_sVMName;			// View model of this weapon
 	string_t				m_sAnimationPrefix;		// Prefix of the animations that should be used by the player carrying this weapon
-			// View-bobbing and swaying.
-	float m_flSideTiltResult;
-	float m_flSideTiltDifference;
-	float m_flForwardOffsetResult;
-	float m_flForwardOffsetDifference;
-
-	// Wall collision thingy like in tarkov and stuff
-	float m_flCurrentDistance;
-	float m_flDistanceDifference;
-
-	QAngle m_angEyeAngles;
-	QAngle m_angViewPunch;
-	QAngle m_angOldFacing;
-	QAngle m_angDelta;
-	QAngle m_angMotion;
-	QAngle m_angCounterMotion;
-	QAngle m_angCompensation;
-
-
 
 #if defined( CLIENT_DLL )
 	int						m_nOldAnimationParity;

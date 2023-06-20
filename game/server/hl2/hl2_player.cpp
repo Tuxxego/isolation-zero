@@ -124,7 +124,22 @@ ConVar sv_infinite_aux_power("sv_infinite_aux_power", "0", FCVAR_CHEAT);
 #endif
 
 #ifdef EZ
-ConVar	sv_visible_command_point( "sv_visible_command_point", "1", FCVAR_REPLICATED );
+void CV_VisibleCommandPointChange( IConVar *var, const char *pOldValue, float flOldValue );
+ConVar	sv_visible_command_point( "sv_visible_command_point", "1", FCVAR_ARCHIVE, "", CV_VisibleCommandPointChange );
+
+void CV_VisibleCommandPointChange( IConVar *var, const char *pOldValue, float flOldValue )
+{
+	if (!sv_visible_command_point.GetBool())
+	{
+		// Remove any command points
+		CBaseEntity *pProp = gEntList.FindEntityByClassname( NULL, "prop_command_point" );
+		while (pProp)
+		{
+			UTIL_Remove( pProp );
+			pProp = gEntList.FindEntityByClassname( pProp, "prop_command_point" );
+		}
+	}
+}
 #endif
 
 ConVar autoaim_unlock_target( "autoaim_unlock_target", "0.8666" );
@@ -143,6 +158,9 @@ ConVar sv_flashlight_cc_maxweight( "sv_flashlight_cc_maxweight", "100", FCVAR_RE
 ConVar sv_flashlight_cc_filename( "sv_flashlight_cc_filename", "ez2_nvg.raw", FCVAR_REPLICATED );
 ConVar sv_player_hands_modelname( "sv_player_hands_modelname", "models/weapons/ez2/v_hands.mdl", FCVAR_REPLICATED, "Filename of model to use for suit inspect animation" );
 ConVar sv_player_kick_default_modelname( "sv_player_kick_default_modelname", "models/weapons/ez2/v_kick.mdl", FCVAR_REPLICATED, "Default filename of model to use for kick animation - can be overridden in map" );
+ConVar sv_pulsepistol_battery_pickup( "sv_pulsepistol_battery_pickup", "1", FCVAR_REPLICATED, "Picks up extra pulse pistols as armor batteries" );
+ConVar sv_pulsepistol_battery_pickup_amount( "sv_pulsepistol_battery_pickup_amount", "0.4", FCVAR_REPLICATED, "What percentage of sk_battery should be provided by extra pulse pistols" );
+ConVar sv_zoom_always_toggles( "sv_zoom_always_toggles", "0", FCVAR_ARCHIVE, "Zoom key toggles zooming" );
 #else
 ConVar sv_command_viewmodel_anims("sv_command_viewmodel_anims", "0", FCVAR_REPLICATED);
 ConVar sv_disallow_zoom_fire("sv_disallow_zoom_fire", "1", FCVAR_REPLICATED);
@@ -805,6 +823,16 @@ void CHL2_Player::CheckSuitZoom( void )
 	//Adrian - No zooming without a suit!
 	if ( IsSuitEquipped() )
 	{
+#ifdef EZ2
+		if ( sv_zoom_always_toggles.GetBool() )
+		{
+			if ( m_afButtonPressed & IN_ZOOM )
+			{
+				ToggleZoom();
+			}
+		}
+		else
+#endif
 		if ( m_afButtonReleased & IN_ZOOM )
 		{
 			StopZooming();
@@ -1522,7 +1550,8 @@ Activity CHL2_Player::Weapon_TranslateActivity( Activity baseAct, bool *pRequire
 	
 #if EXPANDED_HL2DM_ACTIVITIES
 	// +USE activities
-	if ( m_hUseEntity && player_use_anim_enabled.GetBool() )
+	// HACKHACK: Make sure m_hUseEntity is a pickup controller first
+	if ( m_hUseEntity && m_hUseEntity->ClassMatches("player_pickup") && player_use_anim_enabled.GetBool())
 	{
 		CBaseEntity* pHeldEnt = GetPlayerHeldEntity( this );
 		float flMass = pHeldEnt ?
@@ -3575,6 +3604,18 @@ bool CHL2_Player::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
 		return false;
 	}
 #endif
+#endif
+
+#ifdef EZ2
+	if ( pWeapon->ClassMatches( "weapon_pulsepistol" ) && sv_pulsepistol_battery_pickup.GetBool() )
+	{
+		if (Weapon_OwnsThisType( "weapon_pulsepistol" ))
+		{
+			if (ApplyBattery( sv_pulsepistol_battery_pickup_amount.GetFloat() ))
+				UTIL_Remove( pWeapon );
+			return false;
+		}
+	}
 #endif
 
 	return BaseClass::Weapon_CanUse( pWeapon );

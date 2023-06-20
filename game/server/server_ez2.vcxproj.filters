@@ -40,9 +40,6 @@
     <Filter Include="Source Files\HL2MP\Weapons">
       <UniqueIdentifier>{382A0C79-1859-D554-1EB7-DCBE8F115956}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\IZ DLL">
-      <UniqueIdentifier>{4E4AE75D-C3FF-4086-A78E-7F2ADD9173C5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Mapbase">
       <UniqueIdentifier>{96AE379F-B108-4424-9880-320ED1E65A8D}</UniqueIdentifier>
     </Filter>
@@ -61,9 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\choreoobjects.lib">
-      <Filter>Link Libraries</Filter>
-    </Library>
-    <Library Include="..\..\lib\public\discord-rpc.lib">
       <Filter>Link Libraries</Filter>
     </Library>
     <Library Include="..\..\lib\public\dmxloader.lib">
@@ -1919,9 +1913,6 @@
     <ClInclude Include="..\..\game\shared\hl2mp\weapon_slam.h">
       <Filter>Source Files\HL2MP\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="isolationzero\npc_kamiscanner.h">
-      <Filter>Source Files\IZ DLL</Filter>
-    </ClInclude>
     <ClInclude Include="mapbase\ai_grenade.h">
       <Filter>Source Files\Mapbase</Filter>
     </ClInclude>
@@ -3142,6 +3133,9 @@
     <ClCompile Include="ez2\ez2_player.cpp">
       <Filter>Source Files\EZ2 DLL</Filter>
     </ClCompile>
+    <ClCompile Include="ez2\ez2_save_metadata.cpp">
+      <Filter>Source Files\EZ2 DLL</Filter>
+    </ClCompile>
     <ClCompile Include="ez2\npc_baseflora.cpp">
       <Filter>Source Files\EZ2 DLL</Filter>
     </ClCompile>
@@ -3703,12 +3697,6 @@
     <ClCompile Include="..\..\game\shared\hl2mp\weapon_slam.cpp">
       <Filter>Source Files\HL2MP\Weapons</Filter>
     </ClCompile>
-    <ClCompile Include="isolationzero\npc_kamiscanner.cpp">
-      <Filter>Source Files\IZ DLL</Filter>
-    </ClCompile>
-    <ClCompile Include="isolationzero\weapon_striker.cpp">
-      <Filter>Source Files\IZ DLL</Filter>
-    </ClCompile>
     <ClCompile Include="mapbase\ai_grenade.cpp">
       <Filter>Source Files\Mapbase</Filter>
     </ClCompile>
@@ -4043,6 +4031,9 @@
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\source_win32_base.vpc">
+      <Filter>VPC Scripts</Filter>
+    </None>
+    <None Include="..\..\vpc_scripts\steamworks_update.vpc">
       <Filter>VPC Scripts</Filter>
     </None>
     <None Include="..\..\vpc_scripts\version.vpc">

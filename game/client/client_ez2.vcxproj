@@ -68,7 +68,7 @@
       <AdditionalOptions>/Zm200 /Gw</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\episodic;..\..\public;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_ez2;..\..\thirdparty\protobuf-2.3.0\src;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;MAPBASE;_HAS_ITERATOR_DEBUGGING=0;WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;ASW_PROJECTED_TEXTURES;DYNAMIC_RTT_SHADOWS;GLOWS_ENABLE;MAPBASE_RPC;DISCORD_RPC;STEAM_RPC;MAPBASE_VSCRIPT;NEW_RESPONSE_SYSTEM;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_CHROMEHTMLWINDOW;fopen=dont_use_fopen;HL2_CLIENT_DLL;HL2_EPISODIC;EZ;EZ2;HE_APC;GLOWS_ENABLE;CSS_WEAPONS_IN_HL2;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=EZ2;PROJECTDIR=E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=ez2</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;MAPBASE;GAMEPADUI;STEAMWORKS_VERSION=1261;STEAM_INPUT;_HAS_ITERATOR_DEBUGGING=0;WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;ASW_PROJECTED_TEXTURES;DYNAMIC_RTT_SHADOWS;GLOWS_ENABLE;MAPBASE_RPC;DISCORD_RPC;STEAM_RPC;MAPBASE_VSCRIPT;NEW_RESPONSE_SYSTEM;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_CHROMEHTMLWINDOW;fopen=dont_use_fopen;HL2_CLIENT_DLL;HL2_EPISODIC;EZ;EZ2;HE_APC;GLOWS_ENABLE;CSS_WEAPONS_IN_HL2;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=EZ2;PROJECTDIR=C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=ez2</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>.\hl2;.\hl2\elements;..\..\game\shared\hl2;..\..\game\shared\episodic;..\..\public;.\;..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;..\..\game\client\generated_proto_mod_ez2;..\..\thirdparty\protobuf-2.3.0\src;..\..\vgui2\include;..\..\vgui2\controls;..\..\game\shared;.\game_controls;..\..\thirdparty\sixensesdk\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;MAPBASE;WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;ASW_PROJECTED_TEXTURES;DYNAMIC_RTT_SHADOWS;GLOWS_ENABLE;MAPBASE_RPC;DISCORD_RPC;STEAM_RPC;MAPBASE_VSCRIPT;NEW_RESPONSE_SYSTEM;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_CHROMEHTMLWINDOW;fopen=dont_use_fopen;HL2_CLIENT_DLL;HL2_EPISODIC;EZ;EZ2;HE_APC;GLOWS_ENABLE;CSS_WEAPONS_IN_HL2;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=EZ2;PROJECTDIR=E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=ez2</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;MAPBASE;GAMEPADUI;STEAMWORKS_VERSION=1261;STEAM_INPUT;WIN32;_WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=client;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;ASW_PROJECTED_TEXTURES;DYNAMIC_RTT_SHADOWS;GLOWS_ENABLE;MAPBASE_RPC;DISCORD_RPC;STEAM_RPC;MAPBASE_VSCRIPT;NEW_RESPONSE_SYSTEM;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;ENABLE_CHROMEHTMLWINDOW;fopen=dont_use_fopen;HL2_CLIENT_DLL;HL2_EPISODIC;EZ;EZ2;HE_APC;GLOWS_ENABLE;CSS_WEAPONS_IN_HL2;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=EZ2;PROJECTDIR=C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client;_DLL_EXT=.dll;SOURCE1=1;VPCGAME=ez2</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -222,7 +222,10 @@
     <Library Include="..\..\lib\public\choreoobjects.lib" />
     <Library Include="..\..\lib\public\discord-rpc.lib" />
     <Library Include="..\..\lib\public\dmxloader.lib" />
+    <Library Include="..\..\lib\public\expanded_steam.lib" />
+    <Library Include="..\..\lib\common\jpeglib.lib" />
     <Library Include="..\..\lib\common\libcurl.lib" />
+    <Library Include="..\..\lib\common\libpng.lib" />
     <Library Include="..\..\lib\public\libprotobuf.lib" />
     <Library Include="..\..\lib\public\libz.lib" />
     <Library Include="..\..\lib\public\mathlib.lib" />
@@ -486,6 +489,8 @@
     <ClInclude Include="iinput.h" />
     <ClInclude Include="iloadingdisc.h" />
     <ClInclude Include="imessagechars.h" />
+    <ClInclude Include="..\..\common\img_jpeg_loader.h" />
+    <ClInclude Include="..\..\common\img_png_loader.h" />
     <ClInclude Include="in_main.h" />
     <ClInclude Include="inetgraphpanel.h" />
     <ClInclude Include="initializer.h" />
@@ -850,6 +855,7 @@
     <ClInclude Include="..\..\game\shared\mapbase\singleplayer_animstate.h" />
     <ClInclude Include="..\..\game\shared\mapbase\vscript_funcs_shared.h" />
     <ClInclude Include="..\..\game\shared\mapbase\vscript_singletons.h" />
+    <ClInclude Include="mapbase\vscript_vgui.h" />
     <ClInclude Include="..\..\game\shared\mapbase\weapon_custom_scripted.h" />
     <ClInclude Include="sixense\in_sixense.h" />
     <ClInclude Include="sixense\in_sixense_gesture_bindings.h" />
@@ -1097,6 +1103,14 @@
     <ClCompile Include="hud_vehicle.cpp" />
     <ClCompile Include="hud_weapon.cpp" />
     <ClCompile Include="..\..\game\shared\igamesystem.cpp" />
+    <ClCompile Include="..\..\common\img_jpeg_loader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\common\img_png_loader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="in_camera.cpp" />
     <ClCompile Include="in_joystick.cpp" />
     <ClCompile Include="in_main.cpp" />
@@ -1104,6 +1118,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="in_steaminput_client.cpp" />
     <ClCompile Include="initializer.cpp" />
     <ClCompile Include="interpolatedvar.cpp" />
     <ClCompile Include="..\..\public\interpolatortypes.cpp">
@@ -1311,6 +1326,7 @@
     <ClCompile Include="ez2\c_npc_wilson.cpp" />
     <ClCompile Include="ez2\c_weapon_pulse_pistol.cpp" />
     <ClCompile Include="ez2\hud_slamstatus.cpp" />
+    <ClCompile Include="workshop_publish.cpp" />
     <ClCompile Include="ez2\zombiegooproxy.cpp" />
     <ClCompile Include="game_controls\basemodel_panel.cpp" />
     <ClCompile Include="game_controls\basemodelpanel.cpp" />
@@ -1432,6 +1448,7 @@
     <ClCompile Include="..\..\game\shared\mapbase\vscript_funcs_hl2.cpp" />
     <ClCompile Include="..\..\game\shared\mapbase\vscript_funcs_shared.cpp" />
     <ClCompile Include="..\..\game\shared\mapbase\vscript_singletons.cpp" />
+    <ClCompile Include="mapbase\vscript_vgui.cpp" />
     <ClCompile Include="..\..\game\shared\mapbase\weapon_custom_scripted.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -1520,15 +1537,16 @@
     </CustomBuild>
     <CustomBuild Include="client_ez2.vpc">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Running VPC CRC Check - client_ez2.vpc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_ez2.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client\client_ez2.vpc.sentinel</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client\client_ez2.vpc.sentinel</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_ez2.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client\client_ez2.vpc.sentinel</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client\client_ez2.vpc.sentinel</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Running VPC CRC Check - client_ez2.vpc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_ez2.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client\client_ez2.vpc.sentinel</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\tuxx3\Downloads\source-sdk-2013-ez2-mapbase (2)\source-sdk-2013-ez2-mapbase\sp\src\game\client\client_ez2.vpc.sentinel</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">if exist &quot;..\..\devtools\bin\vpc.exe&quot; &quot;..\..\devtools\bin\vpc.exe&quot; -crc2 &quot;client_ez2.vcxproj&quot;&#x0D;&#x0A;if ERRORLEVEL 1 exit /b 1&#x0D;&#x0A;echo crc_complete &gt; C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client\client_ez2.vpc.sentinel</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\tuxx3\source\repos\isolationzero\sp\src\game\client\client_ez2.vpc.sentinel</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="vscript_client.nut" />
+    <None Include="mapbase\vscript_vgui.nut" />
     <None Include="..\..\game\client\client_base.vpc" />
     <None Include="..\..\game\client\client_mapbase.vpc" />
     <None Include="..\..\vpc_scripts\loadaddress.vpc" />
@@ -1543,6 +1561,7 @@
     <None Include="..\..\vpc_scripts\source_dll_win32_release.vpc" />
     <None Include="..\..\vpc_scripts\source_video_base.vpc" />
     <None Include="..\..\vpc_scripts\source_win32_base.vpc" />
+    <None Include="..\..\vpc_scripts\steamworks_update.vpc" />
     <None Include="..\..\vpc_scripts\version.vpc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

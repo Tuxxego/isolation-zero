@@ -34,6 +34,10 @@
 #if !defined(NO_STEAM)
 #include "steam/steam_api.h"
 #endif
+
+#if defined(STEAM_INPUT)
+#include "expanded_steam/isteaminput.h"
+#endif
 #endif
 
 #include "vscript_singletons.h"
@@ -740,7 +744,11 @@ void CScriptGameEventListener::StopListeningForEvent()
 #ifdef _DEBUG
 	// Event listeners are iterated forwards in the game event manager,
 	// removing while iterating will cause it to skip one listener.
-	// This could be prevented by writing a custom game event manager.
+	//
+	// Fix this in engine without altering any behaviour by
+	// changing event exeuction order to tail->head,
+	// changing listener removal to tail->head,
+	// changing listener addition to head
 	if ( m_nEventTick == gpGlobals->tickcount )
 	{
 		Warning("CScriptGameEventListener stopped in the same frame it was fired. This will break other event listeners!\n");
@@ -1273,9 +1281,11 @@ CNetMsgScriptHelper *g_ScriptNetMsg = &scriptnetmsg;
 
 #ifdef _DEBUG
 #ifdef GAME_DLL
-#define DebugNetMsg( l, ... ) do { extern ConVar developer; if (developer.GetInt() >= l) ConColorMsg( Color(100, 225, 255, 255), __VA_ARGS__ ); } while (0);
+ConVar script_net_debug("script_net_debug", "0");
+#define DebugNetMsg( l, ... ) do { if (script_net_debug.GetInt() >= l) ConColorMsg( Color(100, 225, 255, 255), __VA_ARGS__ ); } while (0);
 #else
-#define DebugNetMsg( l, ... ) do { extern ConVar developer; if (developer.GetInt() >= l) ConColorMsg( Color(100, 225, 175, 255), __VA_ARGS__ ); } while (0);
+ConVar script_net_debug("script_net_debug_client", "0");
+#define DebugNetMsg( l, ... ) do { if (script_net_debug.GetInt() >= l) ConColorMsg( Color(100, 225, 175, 255), __VA_ARGS__ ); } while (0);
 #endif
 #define DebugWarning(...) Warning( __VA_ARGS__ )
 #else
@@ -1424,7 +1434,7 @@ void CNetMsgScriptHelper::ReceiveMessage( bf_read &msg )
 	m_MsgIn.StartReading( msg.m_pData, msg.m_nDataBytes );
 #endif
 
-	DebugNetMsg( 2, DLL_LOC_STR " " __FUNCTION__ "()\n" );
+	DebugNetMsg( 2, DLL_LOC_STR " %s()\n", __FUNCTION__ );
 
 	// Don't do anything if there's no VM here. This can happen if a message from the server goes to a VM-less client, or vice versa.
 	if ( !g_pScriptVM )
@@ -1483,7 +1493,7 @@ void CNetMsgScriptHelper::Start( const char *msg )
 		return;
 	}
 
-	DebugNetMsg( 1, DLL_LOC_STR " " __FUNCTION__ "() [%d]%s\n", Hash( msg ), msg );
+	DebugNetMsg( 1, DLL_LOC_STR " %s() [%d]%s\n", __FUNCTION__, Hash( msg ), msg );
 
 #ifdef CLIENT_DLL
 	// Client can write multiple messages in a frame before the usercmd is sent,
@@ -1519,7 +1529,7 @@ void CNetMsgScriptHelper::Start( const char *msg )
 //-----------------------------------------------------------------------------
 void CNetMsgScriptHelper::Send( HSCRIPT player, bool bReliable )
 {
-	DebugNetMsg( 1, DLL_LOC_STR " " __FUNCTION__ "() size(%d)\n", GetNumBitsWritten() );
+	DebugNetMsg( 1, DLL_LOC_STR " %s() size(%d)\n", __FUNCTION__, GetNumBitsWritten() );
 
 	CBaseEntity *pPlayer = ToEnt(player);
 	if ( pPlayer )
@@ -1544,7 +1554,7 @@ void CNetMsgScriptHelper::Send( HSCRIPT player, bool bReliable )
 //-----------------------------------------------------------------------------
 void CNetMsgScriptHelper::Send()
 {
-	DebugNetMsg( 1, DLL_LOC_STR " " __FUNCTION__ "() size(%d)\n", m_bWriteIgnore ? 0 : GetNumBitsWritten() );
+	DebugNetMsg( 1, DLL_LOC_STR " %s() size(%d)\n", __FUNCTION__, m_bWriteIgnore ? 0 : GetNumBitsWritten() );
 
 	m_bWriteReady = true;
 }
@@ -1749,8 +1759,8 @@ void CNetMsgScriptHelper::WriteEntity( HSCRIPT hEnt )
 {
 	SCRIPT_NETMSG_WRITE_FUNC
 	CBaseEntity *p = ToEnt(hEnt);
-	int i = p ? p->entindex() : -1;
-	m_MsgOut.WriteSBitLong( i, MAX_EDICT_BITS );
+	int i = p ? p->entindex() : 0;
+	m_MsgOut.WriteUBitLong( i, MAX_EDICT_BITS );
 }
 
 void CNetMsgScriptHelper::WriteEHandle( HSCRIPT hEnt )
@@ -1861,7 +1871,11 @@ bool CNetMsgScriptHelper::ReadBool()
 
 HSCRIPT CNetMsgScriptHelper::ReadEntity()
 {
-	int index = m_MsgIn_()ReadSBitLong( MAX_EDICT_BITS );
+	int index = m_MsgIn_()ReadUBitLong( MAX_EDICT_BITS );
+
+	if ( !index )
+		return NULL;
+
 #ifdef GAME_DLL
 	edict_t *e = INDEXENT(index);
 	if ( e && !e->IsFree() )
@@ -3232,6 +3246,40 @@ public:
 
 		return ret;
 	}
+	const char *GetCurrentBetaName()
+	{
+		if ( !steamapicontext || !steamapicontext->SteamApps() )
+			return NULL;
+
+		static char ret[16];
+		steamapicontext->SteamApps()->GetCurrentBetaName( ret, sizeof( ret ) );
+		return ret;
+	}
+#if 0
+	bool IsSubscribedApp( int nAppID )
+	{
+		if ( !steamapicontext || !steamapicontext->SteamApps() )
+			return false;
+
+		return steamapicontext->SteamApps()->BIsSubscribedApp( nAppID );
+	}
+#endif
+	bool IsAppInstalled( int nAppID )
+	{
+		if ( !steamapicontext || !steamapicontext->SteamApps() )
+			return false;
+
+		return steamapicontext->SteamApps()->BIsAppInstalled( nAppID );
+	}
+
+#ifdef STEAM_INPUT
+	bool IsSteamRunningOnSteamDeck()
+	{
+		return g_pSteamInput->IsSteamRunningOnSteamDeck();
+	}
+#else
+	bool IsSteamRunningOnSteamDeck() { return false; }
+#endif
 
 } g_ScriptSteamAPI;
 
@@ -3242,6 +3290,155 @@ BEGIN_SCRIPTDESC_ROOT_NAMED( CScriptSteamAPI, "CSteamAPI", SCRIPT_SINGLETON "" )
 	DEFINE_SCRIPTFUNC( GetCurrentBatteryPower, "Return the amount of battery power left in the current system in % [0..100], 255 for being on AC power" )
 	//DEFINE_SCRIPTFUNC( GetIPCountry, "Returns the 2 digit ISO 3166-1-alpha-2 format country code this client is running in (as looked up via an IP-to-location database)" )
 	DEFINE_SCRIPTFUNC( GetCurrentGameLanguage, "Gets the current language that the user has set as API language code. This falls back to the Steam UI language if the user hasn't explicitly picked a language for the title." )
+	DEFINE_SCRIPTFUNC( GetCurrentBetaName, "Gets the name of the user's current beta branch. In Source SDK Base 2013 Singleplayer, this will usually return 'upcoming'." )
+	//DEFINE_SCRIPTFUNC( IsSubscribedApp, "Returns true if the user is subscribed to the specified app ID." )
+	DEFINE_SCRIPTFUNC( IsAppInstalled, "Returns true if the user has the specified app ID installed on their computer." )
+	DEFINE_SCRIPTFUNC( IsSteamRunningOnSteamDeck, "Returns true if the game is running on a Steam Deck." )
+END_SCRIPTDESC();
+#endif // !NO_STEAM
+
+
+//=============================================================================
+//=============================================================================
+
+
+#if defined(STEAM_INPUT)
+//=============================================================================
+// Steam Input
+//
+// Note that this interacts with ISource2013SteamInput, not ISteamInput directly.
+//=============================================================================
+class CScriptSteamInput
+{
+public:
+	bool IsEnabled()
+	{
+		return g_pSteamInput->IsEnabled();
+	}
+
+	//-----------------------------------------------------------------------------
+
+	int GetActiveController()
+	{
+		return InputHandleToScript( g_pSteamInput->GetActiveController() );
+	}
+
+	int GetConnectedControllers( HSCRIPT hArray )
+	{
+		InputHandle_t inputHandles[STEAM_INPUT_MAX_COUNT];
+		int iNumHandles = g_pSteamInput->GetConnectedControllers( inputHandles );
+
+		for (int i = 0; i < iNumHandles; i++)
+		{
+			g_pScriptVM->ArrayAppend( hArray, InputHandleToScript( inputHandles[i] ) );
+		}
+
+		return iNumHandles;
+	}
+
+	const char *GetControllerName( int nController )
+	{
+		return g_pSteamInput->GetControllerName( ScriptToInputHandle( nController ) );
+	}
+
+	int GetControllerType( int nController )
+	{
+		return g_pSteamInput->GetControllerType( ScriptToInputHandle( nController ) );
+	}
+
+	//-----------------------------------------------------------------------------
+
+	bool UsingJoysticks()
+	{
+		return g_pSteamInput->UsingJoysticks();
+	}
+	
+	void SetRumble( int nController, float fLeftMotor, float fRightMotor )
+	{
+		g_pSteamInput->SetRumble( nController, fLeftMotor, fRightMotor );
+	}
+
+	//void StopRumble()
+	//{
+	//	g_pSteamInput->StopRumble();
+	//}
+
+	//-----------------------------------------------------------------------------
+	
+	void SetLEDColor( int nController, int r, int g, int b )
+	{
+		g_pSteamInput->SetLEDColor( ScriptToInputHandle( nController ), r, g, b );
+	}
+
+	void ResetLEDColor( int nController )
+	{
+		g_pSteamInput->ResetLEDColor( ScriptToInputHandle( nController ) );
+	}
+
+	//-----------------------------------------------------------------------------
+	
+	void GetButtonStringsForCommand( int iActionSet, const char *pszCommand, HSCRIPT hArray )
+	{
+		CUtlVector<const char *> szStringList;
+		g_pSteamInput->GetButtonStringsForCommand( pszCommand, szStringList, iActionSet );
+
+		for (int i = 0; i < szStringList.Count(); i++)
+		{
+			g_pScriptVM->ArrayAppend( hArray, szStringList[i] );
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+
+	const char *RemapHudHint( const char *pszInputHint )
+	{
+		g_pSteamInput->RemapHudHint( &pszInputHint );
+		return pszInputHint;
+	}
+
+	//-----------------------------------------------------------------------------
+
+private:
+
+	// Squirrel does not support 64-bit integers, so this is used as a proxy.
+
+	int InputHandleToScript( InputHandle_t nHandle )
+	{
+		int nIndex = m_InputHandles.Find( nHandle );
+		if (nIndex != m_InputHandles.InvalidIndex())
+			return nIndex;
+		return m_InputHandles.AddToTail( nHandle );
+	}
+
+	InputHandle_t ScriptToInputHandle( int nIndex )
+	{
+		if (nIndex >= 0 && nIndex < m_InputHandles.Count())
+			return m_InputHandles[nIndex];
+		return 0;
+	}
+
+	CUtlVector<InputHandle_t> m_InputHandles;
+
+} g_ScriptSteamInput;
+
+BEGIN_SCRIPTDESC_ROOT_NAMED( CScriptSteamInput, "CSource2013SteamInput", SCRIPT_SINGLETON "" )
+	DEFINE_SCRIPTFUNC( IsEnabled, "Returns true if a Steam Input controller is active." )
+
+	DEFINE_SCRIPTFUNC( GetActiveController, "Returns a handle to the currently active controller." )
+	DEFINE_SCRIPTFUNC( GetConnectedControllers, "Appends all connected controller handles into the specified array. Returns the number of controllers connected." )
+	DEFINE_SCRIPTFUNC( GetControllerName, "Returns a shorthand string indicating the specified controller's name." )
+	DEFINE_SCRIPTFUNC( GetControllerType, "Returns the specified controller's direct enum value according to ESteamInputType." )
+
+	DEFINE_SCRIPTFUNC( UsingJoysticks, "Returns true if controller is using joysticks." )
+	DEFINE_SCRIPTFUNC( SetRumble, "Sets the specified controller's rumble on the left and right motor respectively." )
+	//DEFINE_SCRIPTFUNC( StopRumble, "Stops all controller rumbling." )
+
+	DEFINE_SCRIPTFUNC( SetLEDColor, "Sets the specified controller's LED color if it supports it." )
+	DEFINE_SCRIPTFUNC( ResetLEDColor, "Resets any modified LED color on the specified controller to default." )
+
+	DEFINE_SCRIPTFUNC( GetButtonStringsForCommand, "Appends localized button strings for the specified command into the third parameter as an array. First parameter is the action set and second parameter is the command." )
+
+	DEFINE_SCRIPTFUNC( RemapHudHint, "Remaps the input HUD hint if the controller should use a different one. See scripts/steaminput_hintremap.txt" )
 END_SCRIPTDESC();
 #endif // !NO_STEAM
 
@@ -3280,6 +3477,10 @@ void RegisterScriptSingletons()
 
 #if !defined(NO_STEAM)
 	g_pScriptVM->RegisterInstance( &g_ScriptSteamAPI, "steam" );
+#endif
+
+#if defined(STEAM_INPUT)
+	g_pScriptVM->RegisterInstance( &g_ScriptSteamInput, "steaminput" );
 #endif
 #endif
 

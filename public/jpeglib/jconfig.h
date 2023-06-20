@@ -18,10 +18,16 @@
 /* Define this if you get warnings about undefined structures. */
 /* #undef INCOMPLETE_TYPES_BROKEN */
 
-/* Define "boolean" as unsigned char, not int, on Windows systems. */
+/* Define "boolean" as unsigned char, not enum, on Windows systems. */
 #ifdef _WIN32
 #ifndef __RPCNDR_H__		/* don't conflict if rpcndr.h already read */
 typedef unsigned char boolean;
+#endif
+#ifndef FALSE			/* in case these macros already exist */
+#define FALSE	0		/* values of boolean */
+#endif
+#ifndef TRUE
+#define TRUE	1
 #endif
 #define HAVE_BOOLEAN		/* prevent jmorecfg.h from redefining it */
 #endif
@@ -29,9 +35,7 @@ typedef unsigned char boolean;
 #ifdef JPEG_INTERNALS
 
 /* #undef RIGHT_SHIFT_IS_UNSIGNED */
-#ifdef __cplusplus
 #define INLINE __inline__
-#endif
 /* These are for configuring the JPEG memory manager. */
 /* #undef DEFAULT_MAX_MEM */
 /* #undef NO_MKTEMP */

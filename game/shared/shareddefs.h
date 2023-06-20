@@ -19,30 +19,6 @@
 #define ROUND_TO_TICKS( t )		( TICK_INTERVAL * TIME_TO_TICKS( t ) )
 #define TICK_NEVER_THINK		(-1)
 
-// TUX: Log colors
-#define LOG_COLOR_RED       Color( 0xCC, 0x00, 0x00, 0xFF )
-#define LOG_COLOR_GREEN     Color( 0x00, 0xCC, 0x00, 0xFF )
-#define LOG_COLOR_BLUE      Color( 0x00, 0x00, 0xCC, 0xFF )
-#define LOG_COLOR_WHITE     Color( 0xFF, 0xFF, 0xFF, 0xFF )
-#define LOG_COLOR_YELLOW    Color( 0xFF, 0xFF, 0x00, 0xFF )
-#define LOG_COLOR_ORANGE    Color( 0xFF, 0x80, 0x00, 0xFF )
-#define LOG_COLOR_PURPLE    Color( 0x80, 0x00, 0x80, 0xFF )
-#define LOG_COLOR_MAGENTA   Color( 0xFF, 0x00, 0xFF, 0xFF )
-#define LOG_COLOR_CYAN      Color( 0x00, 0xFF, 0xFF, 0xFF )
-#define LOG_COLOR_GRAY      Color( 0xCC, 0xCC, 0xCC, 0xFF )
-#define LOG_COLOR_B_GRAY    Color( 0xDD, 0xDD, 0xDD, 0xFF )
-#define LOG_COLOR_B_RED     Color( 0xFF, 0x00, 0x00, 0xFF )
-#define LOG_COLOR_B_GREEN   Color( 0x00, 0xFF, 0x00, 0xFF )
-#define LOG_COLOR_B_BLUE    Color( 0x00, 0x00, 0xFF, 0xFF )
-
-// TUX: Why not?
-#ifdef EZ2
-#define GAME_NAME           "Isolation: Zero"
-#define GAME_VERSION_MAJOR  1
-#define GAME_VERSION_MINOR  5
-#define GAME_VERSION_PATCH  0
-#endif
-
 #if defined( TF_DLL )
 #define ANIMATION_CYCLE_BITS		10
 #else
@@ -269,7 +245,7 @@ enum CastVote
 
 #define MAX_PLACE_NAME_LENGTH		18
 
-#define MAX_FOV						90
+#define MAX_FOV						110
 
 //===================================================================================================================
 // Team Defines
@@ -618,8 +594,6 @@ enum
 {
 	FX_WATER_IN_SLIME = 0x1,
 };
-
-
 
 
 // Shared think context stuff

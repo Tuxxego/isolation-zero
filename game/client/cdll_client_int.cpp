@@ -125,9 +125,6 @@
 #include "client_virtualreality.h"
 #include "mumble.h"
 
-#include "../gamepadui/igamepadui.h"
-#include "..\IVEngine2\IvUI\iGameUI2.h"
-
 // NVNT includes
 #include "hud_macros.h"
 #include "haptics/ihaptics.h"
@@ -150,8 +147,8 @@
 #include "fbxsystem/fbxsystem.h"
 #endif
 
-#ifdef MAPBASE_VSCRIPT
-#include "vscript_client.h"
+#ifdef STEAM_INPUT
+#include "expanded_steam/isteaminput.h"
 #endif
 
 extern vgui::IInputInternal *g_InputInternal;
@@ -175,6 +172,10 @@ extern vgui::IInputInternal *g_InputInternal;
 #ifdef SIXENSE
 #include "sixense/in_sixense.h"
 #endif
+
+#if defined( GAMEPADUI )
+#include "../gamepadui/igamepadui.h"
+#endif // GAMEPADUI
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -225,12 +226,15 @@ IReplaySystem *g_pReplay = NULL;
 IVEngineServer	*serverengine = NULL;
 #endif
 
+#if defined(GAMEPADUI)
+IGamepadUI *g_pGamepadUI = nullptr;
+#endif // GAMEPADUI
+
 IScriptManager *scriptmanager = NULL;
 
-// TUX: Implement IvUI
-IGameUI2* GameUI2 = nullptr;
-
-IGamepadUI* g_pGamepadUI = nullptr;
+#ifdef STEAM_INPUT
+ISource2013SteamInput *g_pSteamInput = NULL;
+#endif
 
 IHaptics* haptics = NULL;// NVNT haptics system interface singleton
 
@@ -371,6 +375,24 @@ bool g_bTextMode = false;
 class IClientPurchaseInterfaceV2 *g_pClientPurchaseInterface = (class IClientPurchaseInterfaceV2 *)(&g_bTextMode + 156);
 
 static ConVar *g_pcv_ThreadMode = NULL;
+
+// GAMEPADUI TODO - put this somewhere better. (Madi)
+#if defined( GAMEPADUI )
+const bool IsSteamDeck()
+{
+	if ( CommandLine()->FindParm( "-nogamepadui" ) )
+		return false;
+	
+	if ( CommandLine()->FindParm( "-gamepadui" ) )
+		return true;
+
+	const char *pszSteamDeckEnv = getenv( "SteamDeck" );
+	if ( pszSteamDeckEnv && *pszSteamDeckEnv )
+		return atoi( pszSteamDeckEnv ) != 0;
+
+	return false;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: interface for gameui to modify voice bans
@@ -902,6 +924,28 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 #ifndef NO_STEAM
 	ClientSteamContext().Activate();
+
+#ifdef STEAM_INPUT
+	//g_pSteamInput = (ISource2013SteamInput*)appSystemFactory( SOURCE2013STEAMINPUT_INTERFACE_VERSION, NULL );
+	//if (g_pSteamInput == NULL)
+	//{
+	//	g_pSteamInput = (ISource2013SteamInput*)Sys_GetFactoryThis()(SOURCE2013STEAMINPUT_INTERFACE_VERSION, NULL);
+	//}
+
+	g_pSteamInput = CreateSource2013SteamInput();
+	
+	if (g_pSteamInput->IsSteamRunningOnSteamDeck())
+	{
+		CommandLine()->AppendParm( "-deck", NULL );
+		CommandLine()->AppendParm( "-w", "1280" );
+		CommandLine()->AppendParm( "-h", "800" );
+	}
+#endif
+#endif
+
+#ifdef EZ2
+	// For now, always use GamepadUI (overridden by -nogamepadui)
+	CommandLine()->AppendParm( "-gamepadui", NULL );
 #endif
 
 	// We aren't happy unless we get all of our interfaces.
@@ -1097,6 +1141,10 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	vieweffects->Init();
 
 	C_BaseTempEntity::PrecacheTempEnts();
+	
+#ifdef STEAM_INPUT
+	g_pSteamInput->Initialize( appSystemFactory );
+#endif
 
 	input->Init_All();
 
@@ -1148,85 +1196,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	CommandLine()->AppendParm( "+r_hunkalloclightmaps", "0" );
 #endif
 
-	CSysModule* pGamepadUIModule = g_pFullFileSystem->LoadModule("gamepadui", "GAMEBIN", false);
-	if (pGamepadUIModule != nullptr)
-	{
-		GamepadUI_Log("Loaded gamepadui module.\n");
-
-		CreateInterfaceFn gamepaduiFactory = Sys_GetFactory(pGamepadUIModule);
-		if (gamepaduiFactory != nullptr)
-		{
-			g_pGamepadUI = (IGamepadUI*)gamepaduiFactory(GAMEPADUI_INTERFACE_VERSION, NULL);
-			if (g_pGamepadUI != nullptr)
-			{
-				GamepadUI_Log("Initializing IGamepadUI interface...\n");
-
-				factorylist_t factories;
-				FactoryList_Retrieve(factories);
-				g_pGamepadUI->Initialize(factories.appSystemFactory);
-			}
-			else
-			{
-				GamepadUI_Log("Unable to pull IGamepadUI interface.\n");
-			}
-		}
-		else
-		{
-			GamepadUI_Log("Unable to get gamepadui factory.\n");
-		}
-	}
-	else
-	{
-		GamepadUI_Log("Unable to load gamepadui module\n");
-	}
-
-	// TUX: Implement IvUI
-	if (CommandLine()->FindParm("-noivui") == 0)
-	{
-		char GameUI2Path[2048];
-		Q_snprintf(GameUI2Path, sizeof(GameUI2Path), "%s\\bin\\IvUI.dll", engine->GetGameDirectory());
-
-		CSysModule* GameUI2Module = Sys_LoadModule(GameUI2Path);
-		if (GameUI2Module != nullptr)
-		{
-			ConColorMsg(Color(0, 148, 255, 255), "Loaded IvUI.dll\n");
-			CreateInterfaceFn GameUI2Factory = Sys_GetFactory(GameUI2Module);
-			if (GameUI2Factory)
-			{
-				GameUI2 = (IGameUI2*)GameUI2Factory(GAMEUI2_DLL_INTERFACE_VERSION, NULL);
-				if (GameUI2 != nullptr)
-				{
-					ConColorMsg(Color(0, 148, 255, 255), "IvUI: Started with runtime: 995B12\n");
-
-					factorylist_t Factories;
-					FactoryList_Retrieve(Factories);
-					GameUI2->Initialize(Factories.appSystemFactory);
-					GameUI2->OnInitialize();
-				}
-				else
-				{
-					ConColorMsg(Color(0, 148, 255, 255), "Unable to pull IIvUI interface.\n");
-					Error("IvUI: Unable to pull IIvUI interface ");
-
-				}
-			}
-			else
-			{
-				ConColorMsg(Color(0, 148, 255, 255), "Unable to get IvUI factory.\n");
-				Error("IvUI: No factory! ");
-
-			}
-		}
-		else
-
-
-		{
-			ConColorMsg(Color(0, 148, 255, 255), "Unable to load IvUI.dll from:\n%s\n", GameUI2Path);
-			Error("Couldn't load Library IvUI.dll ");
-		}
-
-	}
-
 #ifdef EZ2 // NOTE: This could go into Mapbase in the future! In the event of a merge conflict, use Mapbase's implementaton.
 	if (CommandLine()->FindParm( "-deletesoundcache" ) > 0)
 	{
@@ -1258,7 +1227,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		}
 	}
 #endif
-	ConColorMsg(LOG_COLOR_YELLOW, "%s %u.%u.%u client dll (%s %s)\n", GAME_NAME, GAME_VERSION_MAJOR, GAME_VERSION_MINOR, GAME_VERSION_PATCH, __DATE__, __TIME__);
+
 	return true;
 }
 
@@ -1327,8 +1296,51 @@ void CHLClient::PostInit()
 	}
 #endif
 
+#ifdef STEAM_INPUT
+	g_pSteamInput->PostInit();
+#endif
 
+#if defined(GAMEPADUI)
+	if ( IsSteamDeck() )
+	{
+		CSysModule* pGamepadUIModule = g_pFullFileSystem->LoadModule( "gamepadui", "GAMEBIN", false );
+		if ( pGamepadUIModule != nullptr )
+		{
+			GamepadUI_Log( "Loaded gamepadui module.\n" );
 
+			CreateInterfaceFn gamepaduiFactory = Sys_GetFactory( pGamepadUIModule );
+			if ( gamepaduiFactory != nullptr )
+			{
+				g_pGamepadUI = (IGamepadUI*) gamepaduiFactory( GAMEPADUI_INTERFACE_VERSION, NULL );
+				if ( g_pGamepadUI != nullptr )
+				{
+					GamepadUI_Log( "Initializing IGamepadUI interface...\n" );
+
+					factorylist_t factories;
+					FactoryList_Retrieve( factories );
+					g_pGamepadUI->Initialize( factories.appSystemFactory );
+
+#ifdef STEAM_INPUT
+					g_pSteamInput->SetGamepadUI( true );
+					g_pGamepadUI->SetSteamInput( g_pSteamInput );
+#endif
+				}
+				else
+				{
+					GamepadUI_Log( "Unable to pull IGamepadUI interface.\n" );
+				}
+			}
+			else
+			{
+				GamepadUI_Log( "Unable to get gamepadui factory.\n" );
+			}
+		}
+		else
+		{
+			GamepadUI_Log( "Unable to load gamepadui module\n" );
+		}
+	}
+#endif // GAMEPADUI
 }
 
 //-----------------------------------------------------------------------------
@@ -1378,16 +1390,10 @@ void CHLClient::Shutdown( void )
 
 	IGameSystem::ShutdownAllSystems();
 
-	// TUX: Implement IvUI
-	if (GameUI2 != nullptr)
-	{
-		GameUI2->OnShutdown();
-		GameUI2->Shutdown();
-	}
+#if defined(GAMEPADUI)
 	if (g_pGamepadUI != nullptr)
-	{
 		g_pGamepadUI->Shutdown();
-	}
+#endif // GAMEPADUI
 	
 	gHUD.Shutdown();
 	VGui_Shutdown();
@@ -1437,6 +1443,11 @@ int CHLClient::HudVidInit( void )
 	gHUD.VidInit();
 
 	GetClientVoiceMgr()->VidInit();
+
+#if defined(GAMEPADUI)
+	if (g_pGamepadUI != nullptr)
+		g_pGamepadUI->VidInit();
+#endif // GAMEPADUI
 
 	return 1;
 }
@@ -1489,11 +1500,21 @@ void CHLClient::HudUpdate( bool bActive )
 	}
 #endif
 
-	//TUX: Implement IvUI
-	if (GameUI2 != nullptr)
-		GameUI2->OnUpdate();
+#ifdef STEAM_INPUT
+	//if (g_pSteamInput->IsEnabled())
+	{
+		if( !engine->IsConnected() || engine->IsPaused() || engine->IsLevelMainMenuBackground() )
+		{
+			ActionSet_t iActionSet = AS_MenuControls;
+			g_pSteamInput->RunFrame( iActionSet );
+		}
+	}
+#endif
+
+#if defined(GAMEPADUI)
 	if (g_pGamepadUI != nullptr)
-		g_pGamepadUI->OnUpdate(frametime);
+		g_pGamepadUI->OnUpdate( frametime );
+#endif // GAMEPADUI
 }
 
 //-----------------------------------------------------------------------------
@@ -1780,6 +1801,10 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 
 	input->LevelInit();
 
+#ifdef STEAM_INPUT
+	g_pSteamInput->LevelInitPreEntity();
+#endif
+
 	vieweffects->LevelInit();
 	
 	//Tony; loadup per-map manifests.
@@ -1851,12 +1876,11 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 		CReplayRagdollRecorder::Instance().Init();
 	}
 #endif
-	//TUX: Implement IvUI
-	if (GameUI2 != nullptr)
-		GameUI2->OnLevelInitializePreEntity();
 
+#if defined(GAMEPADUI)
 	if (g_pGamepadUI != nullptr)
 		g_pGamepadUI->OnLevelInitializePreEntity();
+#endif // GAMEPADUI
 }
 
 
@@ -1869,13 +1893,10 @@ void CHLClient::LevelInitPostEntity( )
 	C_PhysPropClientside::RecreateAll();
 	internalCenterPrint->Clear();
 
-
-	// TUX: Implement IvUI
-	if (GameUI2 != nullptr)
-		GameUI2->OnLevelInitializePostEntity();
-
+#if defined(GAMEPADUI)
 	if (g_pGamepadUI != nullptr)
 		g_pGamepadUI->OnLevelInitializePostEntity();
+#endif // GAMEPADUI
 }
 
 //-----------------------------------------------------------------------------
@@ -1942,13 +1963,10 @@ void CHLClient::LevelShutdown( void )
 	
 	StopAllRumbleEffects();
 
-	//TUX: Implement IvUI
-
-	if (GameUI2 != nullptr)
-		GameUI2->OnLevelShutdown();
-
+#if defined(GAMEPADUI)
 	if (g_pGamepadUI != nullptr)
 		g_pGamepadUI->OnLevelShutdown();
+#endif // GAMEPADUI
 
 	gHUD.LevelShutdown();
 

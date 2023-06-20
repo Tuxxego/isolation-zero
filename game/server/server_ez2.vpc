@@ -28,12 +28,6 @@ $Project "Server (Entropy Zero 2)"
 		{
 			$File	"ez1\weapon_ManhackToss.cpp"
 		}
-		$Folder	"IZ DLL"
-		{
-			$File	"isolationzero\npc_kamiscanner.cpp"
-			$File	"isolationzero\npc_kamiscanner.h"
-			$File	"isolationzero\weapon_striker.cpp"
-		}
 		$Folder	"HE DLL"
 		{
 			$File	"Human_Error\vehicle_drivable_apc.h"
@@ -52,6 +46,7 @@ $Project "Server (Entropy Zero 2)"
 			$File	"ez2\ai_sensorydummy.h"
 			$File	"ez2\ez2_player.h"
 			$File	"ez2\ez2_player.cpp"
+			$File	"ez2\ez2_save_metadata.cpp"
 			$File	"ez2\npc_clonecop.h" [!$EZ2_DEMO]
 			$File	"ez2\npc_clonecop.cpp" [!$EZ2_DEMO]
 			$File	"ez2\npc_baseflora.h"
@@ -342,8 +337,6 @@ $Project "Server (Entropy Zero 2)"
 			$File	"hl2\weapon_sniperrifle.cpp"
 			$File	"episodic\weapon_striderbuster.cpp"
 			$File	"episodic\weapon_striderbuster.h"
-			$File	"$SRCDIR\game\shared\hl2mp\weapon_stunstick.cpp"
-			$File	"$SRCDIR\game\shared\hl2mp\weapon_stunstick.h"
 			$File	"episodic\ep1_gamestats.h"
 			$File	"episodic\ep2_gamestats.h"
 			$File	"episodic\ep1_gamestats.cpp" \

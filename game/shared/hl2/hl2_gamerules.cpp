@@ -379,10 +379,6 @@ ConVar	sk_plr_dmg_357			( "sk_plr_dmg_357", "0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_357			( "sk_npc_dmg_357", "0", FCVAR_REPLICATED );
 ConVar	sk_max_357				( "sk_max_357", "0", FCVAR_REPLICATED );
 
-ConVar	sk_plr_dmg_striker("sk_plr_dmg_striker", "20", FCVAR_REPLICATED);
-ConVar	sk_npc_dmg_striker("sk_npc_dmg_striker", "20", FCVAR_REPLICATED);
-ConVar	sk_max_striker("sk_max_striker", "2000", FCVAR_REPLICATED);
-
 ConVar	sk_plr_dmg_crossbow		( "sk_plr_dmg_crossbow", "0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_crossbow		( "sk_npc_dmg_crossbow", "0", FCVAR_REPLICATED );
 ConVar	sk_max_crossbow			( "sk_max_crossbow", "0", FCVAR_REPLICATED );
@@ -401,6 +397,8 @@ ConVar	sk_npc_dmg_gunship_to_plr	( "sk_npc_dmg_gunship_to_plr", "0", FCVAR_REPLI
 
 #ifdef EZ2
 ConVar	sv_player_death_time( "sv_player_death_time", "1.0", FCVAR_REPLICATED );
+
+ConVar	sk_max_stasis_grenade		( "sk_max_stasis_grenade", "5", FCVAR_REPLICATED );
 #endif
 
 #ifdef CSS_WEAPONS_IN_HL2
@@ -2820,9 +2818,7 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round", BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
 		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, 1.5 * 750 * 12, 0 ); // hit like a 1.5kg weight at 750 ft/s
 		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,					BULLET_IMPULSE(10, 600), 0 );
-		
-		def.AddAmmoType("UltraBullet", DMG_BULLET, TRACER_LINE_AND_WHIZ, "sk_plr_dmg_striker", "sk_npc_dmg_striker", "sk_max_striker", BULLET_IMPULSE(200, 1225), 0);
-
+			
 #ifdef EZ1
 		// Entropy Zero
 		def.AddAmmoType("Manhack", DMG_BURN, TRACER_NONE, 0, 0, 2, 0, 0);
@@ -2830,6 +2826,7 @@ CAmmoDef *GetAmmoDef()
 #ifdef EZ2
 		// Entropy Zero 2
 		def.AddAmmoType("XenGrenade", DMG_BLAST, TRACER_NONE, "sk_plr_dmg_grenade", "sk_npc_dmg_grenade", "sk_max_hopwire", 0, 0); // this is the xen grenade
+		def.AddAmmoType("StasisGrenade", DMG_BLAST, TRACER_NONE, "sk_plr_dmg_grenade", "sk_npc_dmg_grenade", "sk_max_stasis_grenade", 0, 0);
 
 		// Entropy Zero 2
 		def.AddAmmoType("GaussPistol", DMG_BULLET, TRACER_LINE_AND_WHIZ, "sk_plr_dmg_gauss_pistol", "sk_npc_dmg_gauss_pistol", "sk_max_gauss_pistol", BULLET_IMPULSE(200, 1225), 0);
@@ -2907,6 +2904,7 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("556mm",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_556mm",		"sk_npc_dmg_556mm",		"sk_max_556mm",		BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("762mm",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_762mm",		"sk_npc_dmg_762mm",		"sk_max_762mm",		BULLET_IMPULSE(200, 1225), 0 );
 #endif
+
 	}
 
 	return &def;

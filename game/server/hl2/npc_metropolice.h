@@ -24,26 +24,13 @@
 #include "ai_behavior_police.h"
 #include "ai_behavior_follow.h"
 #include "ai_sentence.h"
-#ifdef MAPBASE
-#include "mapbase/ai_grenade.h"
-#endif
 #include "props.h"
-#ifdef EXPANDED_RESPONSE_SYSTEM_USAGE
-#include "mapbase/expandedrs_combine.h"
-#define METROPOLICE_USES_RESPONSE_SYSTEM 1
-#endif
 
 class CNPC_MetroPolice;
 
-#ifdef MAPBASE
-class CNPC_MetroPolice : public CAI_GrenadeUser<CAI_BaseActor>
-{
-	DECLARE_CLASS( CNPC_MetroPolice, CAI_GrenadeUser<CAI_BaseActor> );
-#else
 class CNPC_MetroPolice : public CAI_BaseActor
 {
-	DECLARE_CLASS( CNPC_MetroPolice, CAI_BaseActor );
-#endif
+	DECLARE_CLASS(CNPC_MetroPolice, CAI_BaseActor);
 	DECLARE_DATADESC();
 
 public:
@@ -51,194 +38,154 @@ public:
 
 	virtual bool CreateComponents();
 	bool CreateBehaviors();
-	void Spawn( void );
-	void Precache( void );
+	void Spawn(void);
+	void Precache(void);
 
-	Class_T		Classify( void );
-	Disposition_t IRelationType(CBaseEntity *pTarget);
-	float		MaxYawSpeed( void );
-	void		HandleAnimEvent( animevent_t *pEvent );
-	Activity NPC_TranslateActivity( Activity newActivity );
-#ifdef MAPBASE
-	Activity Weapon_TranslateActivity( Activity baseAct, bool *pRequired );
+	Class_T		Classify(void);
+	Disposition_t IRelationType(CBaseEntity* pTarget);
+	float		MaxYawSpeed(void);
+	void		HandleAnimEvent(animevent_t* pEvent);
+	Activity NPC_TranslateActivity(Activity newActivity);
 
-	virtual int			UnholsterWeapon( void );
-	virtual void		OnChangeRunningBehavior( CAI_BehaviorBase *pOldBehavior,  CAI_BehaviorBase *pNewBehavior );
+	Vector		EyeDirection3D(void) { return CAI_BaseHumanoid::EyeDirection3D(); } // cops don't have eyes
 
-	const char*		GetGrenadeAttachment() { return "LHand"; }
-
-	virtual bool IsAltFireCapable() { return (m_iGrenadeCapabilities & GRENCAP_ALTFIRE) != 0 && BaseClass::IsAltFireCapable(); }
-	virtual bool IsGrenadeCapable() { return (m_iGrenadeCapabilities & GRENCAP_GRENADE) != 0; }
-
-	virtual bool	ShouldDropGrenades() { return (m_iGrenadeDropCapabilities & GRENDROPCAP_GRENADE) != 0 && BaseClass::ShouldDropGrenades(); }
-	virtual bool	ShouldDropInterruptedGrenades() { return (m_iGrenadeDropCapabilities & GRENDROPCAP_INTERRUPTED) != 0 && BaseClass::ShouldDropInterruptedGrenades(); }
-	virtual bool	ShouldDropAltFire() { return (m_iGrenadeDropCapabilities & GRENDROPCAP_ALTFIRE) != 0 && BaseClass::ShouldDropAltFire(); }
-#endif
-
-	Vector		EyeDirection3D( void )	{ return CAI_BaseHumanoid::EyeDirection3D(); } // cops don't have eyes
-
-	virtual void Event_Killed( const CTakeDamageInfo &info );
+	virtual void Event_Killed(const CTakeDamageInfo& info);
 
 	virtual void OnScheduleChange();
 
-	float		GetIdealAccel( void ) const;
-	int			ObjectCaps( void ) { return UsableNPCObjectCaps(BaseClass::ObjectCaps()); }
-	void		PrecriminalUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
+	float		GetIdealAccel(void) const;
+	int			ObjectCaps(void) { return UsableNPCObjectCaps(BaseClass::ObjectCaps()); }
+	void		PrecriminalUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
 
 	// These are overridden so that the cop can shove and move a non-criminal player safely
-	CBaseEntity *CheckTraceHullAttack( float flDist, const Vector &mins, const Vector &maxs, int iDamage, int iDmgType, float forceScale, bool bDamageAnyNPC );
-	CBaseEntity *CheckTraceHullAttack( const Vector &vStart, const Vector &vEnd, const Vector &mins, const Vector &maxs, int iDamage, int iDmgType, float flForceScale, bool bDamageAnyNPC );
+	CBaseEntity* CheckTraceHullAttack(float flDist, const Vector& mins, const Vector& maxs, int iDamage, int iDmgType, float forceScale, bool bDamageAnyNPC);
+	CBaseEntity* CheckTraceHullAttack(const Vector& vStart, const Vector& vEnd, const Vector& mins, const Vector& maxs, int iDamage, int iDmgType, float flForceScale, bool bDamageAnyNPC);
 
-	virtual int	SelectSchedule( void );
-	virtual int SelectFailSchedule( int failedSchedule, int failedTask, AI_TaskFailureCode_t taskFailCode );
-	virtual int TranslateSchedule( int scheduleType );
-	void		StartTask( const Task_t *pTask );
-	void		RunTask( const Task_t *pTask );
-	virtual Vector GetActualShootTrajectory( const Vector &shootOrigin );
-	virtual void FireBullets( const FireBulletsInfo_t &info );
-	virtual bool HandleInteraction(int interactionType, void *data, CBaseCombatCharacter* sourceEnt);
-	virtual void Weapon_Equip( CBaseCombatWeapon *pWeapon );
+	virtual int	SelectSchedule(void);
+	virtual int SelectFailSchedule(int failedSchedule, int failedTask, AI_TaskFailureCode_t taskFailCode);
+	virtual int TranslateSchedule(int scheduleType);
+	void		StartTask(const Task_t* pTask);
+	void		RunTask(const Task_t* pTask);
+	virtual Vector GetActualShootTrajectory(const Vector& shootOrigin);
+	virtual void FireBullets(const FireBulletsInfo_t& info);
+	virtual bool HandleInteraction(int interactionType, void* data, CBaseCombatCharacter* sourceEnt);
+	virtual void Weapon_Equip(CBaseCombatWeapon* pWeapon);
 
 	//virtual bool OverrideMoveFacing( const AILocalMoveGoal_t &move, float flInterval );
-	bool		OnObstructionPreSteer( AILocalMoveGoal_t *pMoveGoal, float distClear, AIMoveResult_t *pResult );
-	bool		ShouldBruteForceFailedNav()	{ return false; }
+	bool		OnObstructionPreSteer(AILocalMoveGoal_t* pMoveGoal, float distClear, AIMoveResult_t* pResult);
+	bool		ShouldBruteForceFailedNav() { return false; }
 
-	virtual void GatherConditions( void );
+	virtual void GatherConditions(void);
 
-	virtual bool OverrideMoveFacing( const AILocalMoveGoal_t &move, float flInterval );
+	virtual bool OverrideMoveFacing(const AILocalMoveGoal_t& move, float flInterval);
 
 	// Can't move and shoot when the enemy is an airboat
 	virtual bool ShouldMoveAndShoot();
 
 	// TraceAttack
-	virtual void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	virtual void TraceAttack(const CTakeDamageInfo& info, const Vector& vecDir, trace_t* ptr, CDmgAccumulator* pAccumulator);
 
 	// Speaking
-	virtual void SpeakSentence( int nSentenceType );
-#ifdef METROPOLICE_USES_RESPONSE_SYSTEM
-	bool			SpeakIfAllowed( const char *concept, SentencePriority_t sentencepriority = SENTENCE_PRIORITY_NORMAL, SentenceCriteria_t sentencecriteria = SENTENCE_CRITERIA_IN_SQUAD )
-	{
-		return SpeakIfAllowed( concept, NULL, sentencepriority, sentencecriteria );
-	}
-	bool			SpeakIfAllowed( const char *concept, const char *modifiers, SentencePriority_t sentencepriority = SENTENCE_PRIORITY_NORMAL, SentenceCriteria_t sentencecriteria = SENTENCE_CRITERIA_IN_SQUAD );
-	bool			SpeakIfAllowed( const char *concept, AI_CriteriaSet& modifiers, SentencePriority_t sentencepriority = SENTENCE_PRIORITY_NORMAL, SentenceCriteria_t sentencecriteria = SENTENCE_CRITERIA_IN_SQUAD );
-	void			ModifyOrAppendCriteria( AI_CriteriaSet& set );
-#endif
+	virtual void SpeakSentence(int nSentenceType);
 
 	// Set up the shot regulator based on the equipped weapon
-	virtual void OnUpdateShotRegulator( );
+	virtual void OnUpdateShotRegulator();
 
-	bool	ShouldKnockOutTarget( CBaseEntity *pTarget );
-	void	KnockOutTarget( CBaseEntity *pTarget );
-	void	StunnedTarget( CBaseEntity *pTarget );
-	void	AdministerJustice( void );
+	bool	ShouldKnockOutTarget(CBaseEntity* pTarget);
+	void	KnockOutTarget(CBaseEntity* pTarget);
+	void	StunnedTarget(CBaseEntity* pTarget);
+	void	AdministerJustice(void);
 
-	bool	QueryHearSound( CSound *pSound );
+	bool	QueryHearSound(CSound* pSound);
 
-	void	SetBatonState( bool state );
-	bool	BatonActive( void );
+	void	SetBatonState(bool state);
+	bool	BatonActive(void);
 
-#ifndef METROPOLICE_USES_RESPONSE_SYSTEM
-	CAI_Sentence< CNPC_MetroPolice > *GetSentences() { return &m_Sentences; }
-#endif
+	CAI_Sentence< CNPC_MetroPolice >* GetSentences() { return &m_Sentences; }
 
-	virtual	bool		AllowedToIgnite( void ) { return true; }
+	virtual	bool		AllowedToIgnite(void) { return true; }
 
-	void	PlayFlinchGesture( void );
+	void	PlayFlinchGesture(void);
 
 protected:
 	// Determines the best type of flinch anim to play.
-	virtual Activity GetFlinchActivity( bool bHeavyDamage, bool bGesture );
+	virtual Activity GetFlinchActivity(bool bHeavyDamage, bool bGesture);
 
 	// Only move and shoot when attacking
 	virtual bool OnBeginMoveAndShoot();
 	virtual void OnEndMoveAndShoot();
 
 private:
-	bool		PlayerIsCriminal( void );
-	void		ReleaseManhack( void );
+	bool		PlayerIsCriminal(void);
+	void		ReleaseManhack(void);
 
 	// Speech-related methods
-	void		AnnounceTakeCoverFromDanger( CSound *pSound );
-	void		AnnounceEnemyType( CBaseEntity *pEnemy );
-	void		AnnounceEnemyKill( CBaseEntity *pEnemy );
-	void		AnnounceHarrassment( );
-	void		AnnounceOutOfAmmo( );
+	void		AnnounceTakeCoverFromDanger(CSound* pSound);
+	void		AnnounceEnemyType(CBaseEntity* pEnemy);
+	void		AnnounceEnemyKill(CBaseEntity* pEnemy);
+	void		AnnounceHarrassment();
+	void		AnnounceOutOfAmmo();
 
 	// Behavior-related sentences
-	void		SpeakFuncTankSentence( int nSentenceType );
-	void		SpeakAssaultSentence( int nSentenceType );
-	void		SpeakStandoffSentence( int nSentenceType );
+	void		SpeakFuncTankSentence(int nSentenceType);
+	void		SpeakAssaultSentence(int nSentenceType);
+	void		SpeakStandoffSentence(int nSentenceType);
 
-	virtual void	LostEnemySound( void );
-	virtual void	FoundEnemySound( void );
-	virtual void	AlertSound( void );
-	virtual void	PainSound( const CTakeDamageInfo &info );
-	virtual void	DeathSound( const CTakeDamageInfo &info );
-	virtual void	IdleSound( void );
-	virtual bool	ShouldPlayIdleSound( void );
+	virtual void	LostEnemySound(void);
+	virtual void	FoundEnemySound(void);
+	virtual void	AlertSound(void);
+	virtual void	PainSound(const CTakeDamageInfo& info);
+	virtual void	DeathSound(const CTakeDamageInfo& info);
+	virtual void	IdleSound(void);
+	virtual bool	ShouldPlayIdleSound(void);
 
 	// Burst mode!
-	void		SetBurstMode( bool bEnable );
+	void		SetBurstMode(bool bEnable);
 
-	int			OnTakeDamage_Alive( const CTakeDamageInfo &info );
+	int			OnTakeDamage_Alive(const CTakeDamageInfo& info);
 
-	int			GetSoundInterests( void );
+	int			GetSoundInterests(void);
 
-	void		BuildScheduleTestBits( void );
+	void		BuildScheduleTestBits(void);
 
-	bool		CanDeployManhack( void );
+	bool		CanDeployManhack(void);
 
-	bool		ShouldHitPlayer( const Vector &targetDir, float targetDist );
+	bool		ShouldHitPlayer(const Vector& targetDir, float targetDist);
 
-	void		PrescheduleThink( void );
-	
-	void		SetPlayerCriminalDuration( float time );
+	void		PrescheduleThink(void);
 
-	void		IncrementPlayerCriminalStatus( void );
+	void		SetPlayerCriminalDuration(float time);
 
-	virtual bool		UseAttackSquadSlots()	{ return true; }
+	void		IncrementPlayerCriminalStatus(void);
 
-	WeaponProficiency_t CalcWeaponProficiency( CBaseCombatWeapon *pWeapon );
+	virtual bool		UseAttackSquadSlots() { return true; }
+
+	WeaponProficiency_t CalcWeaponProficiency(CBaseCombatWeapon* pWeapon);
 
 	// Inputs
-	void InputEnableManhackToss( inputdata_t &inputdata );
-#ifdef MAPBASE
-	void InputDisableManhackToss( inputdata_t &inputdata );
-	void InputDeployManhack( inputdata_t &inputdata );
-	void InputAddManhacks( inputdata_t &inputdata );
-	void InputSetManhacks( inputdata_t &inputdata );
-#endif
-	void InputSetPoliceGoal( inputdata_t &inputdata );
-	void InputActivateBaton( inputdata_t &inputdata );
-#ifdef MAPBASE
-	void InputAdministerJustice( inputdata_t &inputdata );
-	void InputAddWarnings( inputdata_t &inputdata );
-	void InputSetWarnings( inputdata_t &inputdata );
-#endif
-#ifdef EZ
-	void InputTriggerIdleQuestion( inputdata_t &inputdata );
-#endif
+	void InputEnableManhackToss(inputdata_t& inputdata);
+	void InputSetPoliceGoal(inputdata_t& inputdata);
+	void InputActivateBaton(inputdata_t& inputdata);
 
-	void NotifyDeadFriend ( CBaseEntity* pFriend );
+	void NotifyDeadFriend(CBaseEntity* pFriend);
 
 	// Stitch aiming!
-	void AimBurstRandomly( int nMinCount, int nMaxCount, float flMinDelay, float flMaxDelay );
-	void AimBurstAtEnemy( float flReactionTime );
-	void AimBurstInFrontOfEnemy( float flReactionTime );
-	void AimBurstAlongSideOfEnemy( float flFollowTime );
-	void AimBurstBehindEnemy( float flFollowTime );
-	void AimBurstTightGrouping( float flShotTime );
+	void AimBurstRandomly(int nMinCount, int nMaxCount, float flMinDelay, float flMaxDelay);
+	void AimBurstAtEnemy(float flReactionTime);
+	void AimBurstInFrontOfEnemy(float flReactionTime);
+	void AimBurstAlongSideOfEnemy(float flFollowTime);
+	void AimBurstBehindEnemy(float flFollowTime);
+	void AimBurstTightGrouping(float flShotTime);
 
 	// Anim event handlers
-	void OnAnimEventDeployManhack( animevent_t *pEvent );
-	void OnAnimEventShove( void );
-	void OnAnimEventBatonOn( void );
-	void OnAnimEventBatonOff( void );
-	void OnAnimEventStartDeployManhack( void );
-	void OnAnimEventPreDeployManhack( void );
+	void OnAnimEventDeployManhack(animevent_t* pEvent);
+	void OnAnimEventShove(void);
+	void OnAnimEventBatonOn(void);
+	void OnAnimEventBatonOff(void);
+	void OnAnimEventStartDeployManhack(void);
+	void OnAnimEventPreDeployManhack(void);
 
-	bool HasBaton( void );
+	bool HasBaton(void);
 
 	// Normal schedule selection 
 	int SelectCombatSchedule();
@@ -247,126 +194,111 @@ private:
 	int SelectRangeAttackSchedule();
 	int SelectScheduleNoDirectEnemy();
 	int SelectScheduleInvestigateSound();
-	int SelectShoveSchedule( void );
+	int SelectShoveSchedule(void);
 
-	bool TryToEnterPistolSlot( int nSquadSlot );
+	bool TryToEnterPistolSlot(int nSquadSlot);
 
 	// Airboat schedule selection
 	int SelectAirboatCombatSchedule();
 	int SelectAirboatRangeAttackSchedule();
 
-#ifdef MAPBASE
-	int SelectBehaviorOverrideSchedule();
-
-	bool IsCrouchedActivity( Activity activity );
-
-	// This is something Valve did with Combine soldiers so they would throw grenades during standoffs.
-	// We're using a similar thing here so metrocops deploy manhacks.
-	class CMetroPoliceStandoffBehavior : public CAI_ComponentWithOuter<CNPC_MetroPolice, CAI_StandoffBehavior>
-	{
-		typedef CAI_ComponentWithOuter<CNPC_MetroPolice, CAI_StandoffBehavior> BaseClass;
-
-		virtual int SelectScheduleAttack();
-	};
-#endif
-
 	// Handle flinching
-	bool IsHeavyDamage( const CTakeDamageInfo &info );
+	bool IsHeavyDamage(const CTakeDamageInfo& info);
 
 	// Is my enemy currently in an airboat?
 	bool IsEnemyInAnAirboat() const;
 
 	// Returns the airboat
-	CBaseEntity *GetEnemyAirboat() const;
+	CBaseEntity* GetEnemyAirboat() const;
 
 	// Compute a predicted enemy position n seconds into the future
-	void PredictShootTargetPosition( float flDeltaTime, float flMinLeadDist, float flAddVelocity, Vector *pVecTarget, Vector *pVecTargetVel );
+	void PredictShootTargetPosition(float flDeltaTime, float flMinLeadDist, float flAddVelocity, Vector* pVecTarget, Vector* pVecTargetVel);
 
 	// Compute a predicted velocity n seconds into the future (given a known acceleration rate)
-	void PredictShootTargetVelocity( float flDeltaTime, Vector *pVecTargetVel );
+	void PredictShootTargetVelocity(float flDeltaTime, Vector* pVecTargetVel);
 
 	// How many shots will I fire in a particular amount of time?
-	int CountShotsInTime( float flDeltaTime ) const;
-	float GetTimeForShots( int nShotCount ) const;
+	int CountShotsInTime(float flDeltaTime) const;
+	float GetTimeForShots(int nShotCount) const;
 
 	// Visualize stitch
-	void VisualizeStitch( const Vector &vecStart, const Vector &vecEnd );
+	void VisualizeStitch(const Vector& vecStart, const Vector& vecEnd);
 
 	// Visualize line of death
-	void VisualizeLineOfDeath( );
+	void VisualizeLineOfDeath();
 
 	// Modify the stitch length
-	float ComputeDistanceStitchModifier( float flDistanceToTarget ) const;
+	float ComputeDistanceStitchModifier(float flDistanceToTarget) const;
 
 	// Adjusts the burst toward the target as it's being fired.
-	void SteerBurstTowardTarget( );
+	void SteerBurstTowardTarget();
 
 	// Methods to compute shot trajectory based on burst mode
-	Vector ComputeBurstLockOnTrajectory( const Vector &shootOrigin );
-	Vector ComputeBurstDeliberatelyMissTrajectory( const Vector &shootOrigin );
-	Vector ComputeBurstTrajectory( const Vector &shootOrigin );
-	Vector ComputeTightBurstTrajectory( const Vector &shootOrigin );
+	Vector ComputeBurstLockOnTrajectory(const Vector& shootOrigin);
+	Vector ComputeBurstDeliberatelyMissTrajectory(const Vector& shootOrigin);
+	Vector ComputeBurstTrajectory(const Vector& shootOrigin);
+	Vector ComputeTightBurstTrajectory(const Vector& shootOrigin);
 
 	// Are we currently firing a burst?
 	bool IsCurrentlyFiringBurst() const;
 
 	// Which entity are we actually trying to shoot at?
-	CBaseEntity *GetShootTarget();
+	CBaseEntity* GetShootTarget();
 
 	// Different burst steering modes
-	void SteerBurstTowardTargetUseSpeedOnly( const Vector &vecShootAt, const Vector &vecShootAtVelocity, float flPredictTime, int nShotsTillPredict );
-	void SteerBurstTowardTargetUseVelocity( const Vector &vecShootAt, const Vector &vecShootAtVelocity, int nShotsTillPredict );
-	void SteerBurstTowardTargetUsePosition( const Vector &vecShootAt, const Vector &vecShootAtVelocity, int nShotsTillPredict );
-	void SteerBurstTowardPredictedPoint( const Vector &vecShootAt, const Vector &vecShootAtVelocity, int nShotsTillPredict );
-	void SteerBurstWithinLineOfDeath( );
+	void SteerBurstTowardTargetUseSpeedOnly(const Vector& vecShootAt, const Vector& vecShootAtVelocity, float flPredictTime, int nShotsTillPredict);
+	void SteerBurstTowardTargetUseVelocity(const Vector& vecShootAt, const Vector& vecShootAtVelocity, int nShotsTillPredict);
+	void SteerBurstTowardTargetUsePosition(const Vector& vecShootAt, const Vector& vecShootAtVelocity, int nShotsTillPredict);
+	void SteerBurstTowardPredictedPoint(const Vector& vecShootAt, const Vector& vecShootAtVelocity, int nShotsTillPredict);
+	void SteerBurstWithinLineOfDeath();
 
 	// Set up the shot regulator
-	int SetupBurstShotRegulator( float flReactionTime );
+	int SetupBurstShotRegulator(float flReactionTime);
 
 	// Choose a random vector somewhere between the two specified vectors
-	void RandomDirectionBetweenVectors( const Vector &vecStart, const Vector &vecEnd, Vector *pResult );
+	void RandomDirectionBetweenVectors(const Vector& vecStart, const Vector& vecEnd, Vector* pResult);
 
 	// Stitch selector
-	float StitchAtWeight( float flDist, float flSpeed, float flDot, float flReactionTime, const Vector &vecTargetToGun );
-	float StitchAcrossWeight( float flDist, float flSpeed, float flDot, float flReactionTime );
-	float StitchAlongSideWeight( float flDist, float flSpeed, float flDot );
-	float StitchBehindWeight( float flDist, float flSpeed, float flDot );
-	float StitchTightWeight( float flDist, float flSpeed, const Vector &vecTargetToGun, const Vector &vecVelocity );
+	float StitchAtWeight(float flDist, float flSpeed, float flDot, float flReactionTime, const Vector& vecTargetToGun);
+	float StitchAcrossWeight(float flDist, float flSpeed, float flDot, float flReactionTime);
+	float StitchAlongSideWeight(float flDist, float flSpeed, float flDot);
+	float StitchBehindWeight(float flDist, float flSpeed, float flDot);
+	float StitchTightWeight(float flDist, float flSpeed, const Vector& vecTargetToGun, const Vector& vecVelocity);
 	int SelectStitchSchedule();
 
 	// Can me enemy see me? 
-	bool CanEnemySeeMe( );
+	bool CanEnemySeeMe();
 
 	// Combat schedule selection 
 	int SelectMoveToLedgeSchedule();
 
 	// position to shoot at
-	Vector StitchAimTarget( const Vector &posSrc, bool bNoisy );
+	Vector StitchAimTarget(const Vector& posSrc, bool bNoisy);
 
 	// Should we attempt to stitch?
 	bool ShouldAttemptToStitch();
 
 	// Deliberately aims as close as possible w/o hitting
-	Vector AimCloseToTargetButMiss( CBaseEntity *pTarget, const Vector &shootOrigin );
+	Vector AimCloseToTargetButMiss(CBaseEntity* pTarget, const Vector& shootOrigin);
 
 	// Compute the actual reaction time based on distance + speed modifiers
-	float AimBurstAtReactionTime( float flReactonTime, float flDistToTargetSqr, float flCurrentSpeed );
-	int AimBurstAtSetupHitCount( float flDistToTargetSqr, float flCurrentSpeed );
+	float AimBurstAtReactionTime(float flReactonTime, float flDistToTargetSqr, float flCurrentSpeed);
+	int AimBurstAtSetupHitCount(float flDistToTargetSqr, float flCurrentSpeed);
 
 	// How many squad members are trying to arrest the player?
 	int SquadArrestCount();
 
 	// He's resisting arrest!
 	void EnemyResistingArrest();
-	void VPhysicsCollision( int index, gamevcollisionevent_t *pEvent );
+	void VPhysicsCollision(int index, gamevcollisionevent_t* pEvent);
 
 	// Rappel
-	virtual bool IsWaitingToRappel( void ) { return m_RappelBehavior.IsWaitingToRappel(); }
+	virtual bool IsWaitingToRappel(void) { return m_RappelBehavior.IsWaitingToRappel(); }
 	void BeginRappel() { m_RappelBehavior.BeginRappel(); }
-#ifdef EZ2
-	// Used by the Arbeit helicopter
-	virtual bool HasRappelBehavior() { return true; }
-	virtual void StartWaitingForRappel() { m_RappelBehavior.StartWaitingForRappel(); }
+
+#ifdef EZ
+	EyeGlow_t* GetEyeGlowData(int i);
+	int			  GetNumGlows();
 #endif
 
 private:
@@ -434,15 +366,9 @@ private:
 		SCHED_METROPOLICE_ALERT_FACE_BESTSOUND,
 		SCHED_METROPOLICE_RETURN_TO_PRECHASE,
 		SCHED_METROPOLICE_SMASH_PROP,
-#ifdef MAPBASE
-		SCHED_METROPOLICE_FORCED_GRENADE_THROW,
-		SCHED_METROPOLICE_MOVE_TO_FORCED_GREN_LOS,
-		SCHED_METROPOLICE_RANGE_ATTACK2,
-		SCHED_METROPOLICE_AR2_ALTFIRE,
-#endif
 	};
 
-	enum 
+	enum
 	{
 		TASK_METROPOLICE_HARASS = BaseClass::NEXT_TASK,
 		TASK_METROPOLICE_DIE_INSTANTLY,
@@ -466,12 +392,6 @@ private:
 		TASK_METROPOLICE_WAIT_FOR_SENTENCE,
 		TASK_METROPOLICE_GET_PATH_TO_PRECHASE,
 		TASK_METROPOLICE_CLEAR_PRECHASE,
-#ifdef MAPBASE
-		TASK_METROPOLICE_GET_PATH_TO_FORCED_GREN_LOS,
-		TASK_METROPOLICE_DEFER_SQUAD_GRENADES,
-		TASK_METROPOLICE_FACE_TOSS_DIR,
-		TASK_METROPOLICE_PLAY_SEQUENCE_FACE_ALTFIRE_TARGET,
-#endif
 	};
 
 private:
@@ -479,6 +399,7 @@ private:
 	int				m_iPistolClips;		// How many clips the cop has in reserve
 	int				m_iManhacks;		// How many manhacks the cop has
 	bool			m_fWeaponDrawn;		// Is my weapon drawn? (ready to use)
+	bool			m_bTraitorCops;		// Define if the cop is a traitor or not
 	bool			m_bSimpleCops;		// The easy version of the cops
 	int				m_LastShootSlot;
 	CRandSimTimer	m_TimeYieldShootSlot;
@@ -502,12 +423,12 @@ private:
 	float			m_flValidStitchTime;
 	float			m_flNextLedgeCheckTime;
 	float			m_flTaskCompletionTime;
-	
+
 	bool			m_bShouldActivateBaton;
 	float			m_flBatonDebounceTime;	// Minimum amount of time before turning the baton off
 	float			m_flLastPhysicsFlinchTime;
 	float			m_flLastDamageFlinchTime;
-	
+
 	// Sentences
 	float			m_flNextPainSoundTime;
 	float			m_flNextLostSoundTime;
@@ -526,34 +447,19 @@ private:
 	// Outputs
 	COutputEvent	m_OnStunnedPlayer;
 	COutputEvent	m_OnCupCopped;
-#ifdef MAPBASE
-	COutputEHANDLE	m_OnHitByPhysicsObject;
-	COutputEHANDLE	m_OutManhack;
-
-	// Determines whether this NPC is allowed to use grenades or alt-fire stuff.
-	eGrenadeCapabilities m_iGrenadeCapabilities;
-	eGrenadeDropCapabilities m_iGrenadeDropCapabilities;
-#endif
-
 
 	AIHANDLE		m_hManhack;
 	CHandle<CPhysicsProp>	m_hBlockingProp;
 
 	CAI_ActBusyBehavior		m_ActBusyBehavior;
-#ifdef MAPBASE
-	CMetroPoliceStandoffBehavior	m_StandoffBehavior;
-#else
 	CAI_StandoffBehavior	m_StandoffBehavior;
-#endif
 	CAI_AssaultBehavior		m_AssaultBehavior;
 	CAI_FuncTankBehavior	m_FuncTankBehavior;
 	CAI_RappelBehavior		m_RappelBehavior;
 	CAI_PolicingBehavior	m_PolicingBehavior;
 	CAI_FollowBehavior		m_FollowBehavior;
 
-#ifndef METROPOLICE_USES_RESPONSE_SYSTEM
 	CAI_Sentence< CNPC_MetroPolice > m_Sentences;
-#endif
 
 	int				m_nRecentDamage;
 	float			m_flRecentDamageTime;

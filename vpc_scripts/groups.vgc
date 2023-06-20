@@ -12,7 +12,6 @@ $Group "gamedlls"
 {
 	"client"
 	"server"
-	"ivui"
 }
 
 $Group "game"
@@ -24,14 +23,20 @@ $Group "game"
 	"tier1"
 	"vgui_controls"
 	"vscript"
+	"expanded_steam"
 	"responserules"
-	"ivui"
 	"gamepadui"
+}
+
+$Group "shaderdlls"
+{
+	"game_shader_dx9"
 }
 
 $Group "shaders"
 {
 	"game_shader_dx9"
+	"mathlib"
 }
 
 $Group "everything"
@@ -49,7 +54,6 @@ $Group "everything"
 	"qc_eyes"
 	"raytrace"
 	"server"
-	"ivui"
 	"serverplugin_empty"
 	"tgadiff"
 	"tier1"
@@ -63,6 +67,8 @@ $Group "everything"
 	"vtfdiff"
 	"vvis_dll"
 	"vvis_launcher"
+	"expanded_steam"
+	"gamepadui"
 }
 
 $Group "dedicated"
@@ -70,7 +76,6 @@ $Group "dedicated"
 	"mathlib"
 	"server"
 	"tier1"
-	"ivui"
 }
 
 $Group "maptools"
@@ -85,5 +90,14 @@ $Group "maptools"
 	"raytrace"
 	"tier1"
 	"vscript"
+}
+
+$Group "gamepadui"
+{
+	"mathlib"
+	"tier1"
+	"vgui_controls"
+	"expanded_steam"
+	"gamepadui"
 }
 
