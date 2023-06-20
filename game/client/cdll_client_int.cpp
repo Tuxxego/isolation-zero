@@ -1228,6 +1228,10 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	}
 #endif
 
+	// TUXXEGO: From my Mod ARSENIO 2044
+
+	ConColorMsg(LOG_COLOR_YELLOW, "%s %u.%u.%u client dll (%s %s)\n", GAME_NAME, GAME_VERSION_MAJOR, GAME_VERSION_MINOR, GAME_VERSION_PATCH, __DATE__, __TIME__);
+
 	return true;
 }
 
