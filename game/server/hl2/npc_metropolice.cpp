@@ -5647,8 +5647,8 @@ EyeGlow_t* CNPC_MetroPolice::GetEyeGlowData(int i)
 
 	EyeGlow_t* eyeGlow = new EyeGlow_t();
 
-	eyeGlow->spriteName = "sprites/light_glow02.vmt";
-	eyeGlow->attachment = "eyes";
+	//eyeGlow->spriteName = "sprites/light_glow02.vmt";
+	//eyeGlow->attachment = "eyes";
 
 	eyeGlow->alpha = 100;
 	eyeGlow->red = 0;
