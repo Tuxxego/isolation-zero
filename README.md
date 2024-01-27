@@ -4,4 +4,4 @@ https://www.moddb.com/mods/isolation-zero
 
 NOTE: Currently this codebase is broken, it is being redone and will be on a new git branch.
 
-just kidding traitor cops coming tomorrow at 5:35 PM.
+just kidding traitor cops coming tomorrow at 5:35 PM. (fr)
